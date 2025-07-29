@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ponto Digital</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    input, button { margin: 8px; padding: 10px 20px; font-size: 16px; }
+    #painel { display: none; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Registro de Ponto</h2>
+
+  <div id="login">
+    <input type="text" id="nome" placeholder="Seu nome">
+    <button onclick="entrar()">Entrar</button>
+  </div>
+
+  <div id="painel">
+    <h3 id="saudacao"></h3>
+    <button onclick="registrar('Entrada')">Entrada</button>
+    <button onclick="registrar('Almoço - Saída')">Almoço - Saída</button>
+    <button onclick="registrar('Almoço - Volta')">Almoço - Volta</button>
+    <button onclick="registrar('Saída')">Saída</button>
+    <p id="mensagem"></p>
+  </div>
+
+  <script>
+    let usuario = '';
+
+    function entrar() {
+      const nome = document.getElementById('nome').value.trim();
+      if (nome === '') return alert('Digite seu nome');
+      usuario = nome;
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
+      document.getElementById('saudacao').innerText = `Olá, ${usuario}`;
+    }
+
+    function registrar(tipo) {
+      const horario = new Date().toLocaleString('pt-BR');
+      document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
+
+      fetch('https://script.google.com/macros/s/AKfycbzxJFiJkTG11qY0RbCYc1jxcFVYrSCper8QlwpCgC61tedZbA_XJhiPE8uCjpnsrMlDbQ/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome: usuario, tipo, horario })
+      });
+    }
+  </script>
+</body>
+</html>
