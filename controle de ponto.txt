@@ -4,51 +4,71 @@
   <meta charset="UTF-8">
   <title>Ponto Digital</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    input, button { margin: 8px; padding: 10px 20px; font-size: 16px; }
-    #painel { display: none; margin-top: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      padding: 50px;
+    }
+    input, button {
+      margin: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    .box {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: inline-block;
+    }
+    #painel {
+      display: none;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <h2>Registro de Ponto</h2>
 
-  <div id="login">
-    <input type="text" id="nome" placeholder="Seu nome">
-    <button onclick="entrar()">Entrar</button>
-  </div>
+  <div class="box">
+    <h2>Registro de Ponto</h2>
 
-  <div id="painel">
-    <h3 id="saudacao"></h3>
-    <button onclick="registrar('Entrada')">Entrada</button>
-    <button onclick="registrar('Almoço - Saída')">Almoço - Saída</button>
-    <button onclick="registrar('Almoço - Volta')">Almoço - Volta</button>
-    <button onclick="registrar('Saída')">Saída</button>
-    <p id="mensagem"></p>
+    <div id="login">
+      <input type="text" id="nome" placeholder="Nome do colaborador" required><br>
+      <input type="text" id="cpf" placeholder="CPF" required><br>
+      <button onclick="entrar()">Entrar</button>
+    </div>
+
+    <div id="painel">
+      <h3 id="saudacao"></h3>
+      <button onclick="registrar('Entrada')">Entrada</button>
+      <button onclick="registrar('Saída Almoço')">Saída Almoço</button>
+      <button onclick="registrar('Volta Almoço')">Volta Almoço</button>
+      <button onclick="registrar('Saída Final')">Saída Final</button>
+      <p id="mensagem" style="margin-top:15px;"></p>
+    </div>
   </div>
 
   <script>
-    let usuario = '';
+    let nome = '';
+    let cpf = '';
 
     function entrar() {
-      const nome = document.getElementById('nome').value.trim();
-      if (nome === '') return alert('Digite seu nome');
-      usuario = nome;
+      nome = document.getElementById('nome').value.trim();
+      cpf = document.getElementById('cpf').value.trim();
+
+      if (!nome || !cpf) {
+        alert('Preencha todos os campos.');
+        return;
+      }
+
       document.getElementById('login').style.display = 'none';
       document.getElementById('painel').style.display = 'block';
-      document.getElementById('saudacao').innerText = `Olá, ${usuario}`;
+      document.getElementById('saudacao').innerText = `Olá, ${nome}`;
     }
 
     function registrar(tipo) {
       const horario = new Date().toLocaleString('pt-BR');
       document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
 
-      fetch('https://script.google.com/macros/s/AKfycbzxJFiJkTG11qY0RbCYc1jxcFVYrSCper8QlwpCgC61tedZbA_XJhiPE8uCjpnsrMlDbQ/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome: usuario, tipo, horario })
-      });
-    }
-  </script>
-</body>
-</html>
+      const url = 'https://sc
