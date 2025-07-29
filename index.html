@@ -69,4 +69,24 @@
 
     function registrar(tipo) {
       const horario = new Date().toLocaleString('pt-BR');
-      document.getElementById('mensagem').innerText = `${ti
+      document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
+
+      // Substitua abaixo pelo ID real do seu Apps Script
+      const url = 'https://script.google.com/macros/s/AKfycbySeAsK13T_6ypaFyKhH4zHwtDrbRDKqT16CsUa-vi06EqePk7wglT1XuyC6g_M_rfLpA/exec';
+
+      fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: nome,
+          cpf: cpf,
+          tipo: tipo,
+          horario: horario
+        })
+      });
+    }
+  </script>
+</body>
+</html>
+
