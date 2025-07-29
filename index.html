@@ -1,72 +1,111 @@
-function doPost(e) {
-  try {
-    const ss = SpreadsheetApp.openById("1RGRHiGyNzjv9kS7qJ5cYdm4EQOus9gBlkq-5GYW_Mn0");
-    const sheet = ss.getSheetByName("Página1");  // Confirme o nome da aba
-    const dados = JSON.parse(e.postData.contents);
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ponto Digital</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background-color: #f5f5f5;
+    }
+    input, button {
+      margin: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #painel {
+      display: none;
+      margin-top: 20px;
+    }
+    .box {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
 
-    const nome = dados.nome;
-    const cpf = dados.cpf;
-    const tipo = dados.tipo;
+  <div class="box">
+    <h2>Registro de Ponto</h2>
 
-    const dataAtual = new Date();
-    const dataFormatada = Utilities.formatDate(dataAtual, "GMT-3", "dd/MM/yyyy");
-    const horaFormatada = Utilities.formatDate(dataAtual, "GMT-3", "HH:mm:ss");
+    <!-- Login -->
+    <div id="login">
+      <input type="text" id="nome" placeholder="Nome do colaborador" required /><br />
+      <input type="text" id="cpf" placeholder="CPF" required /><br />
+      <button onclick="entrar()">Entrar</button>
+    </div>
 
-    const registros = sheet.getDataRange().getValues();
+    <!-- Painel para batida de ponto -->
+    <div id="painel">
+      <h3 id="saudacao"></h3>
+      <button onclick="registrar('Entrada')">Entrada</button>
+      <button onclick="registrar('Saída Almoço')">Saída Almoço</button>
+      <button onclick="registrar('Volta Almoço')">Volta Almoço</button>
+      <button onclick="registrar('Saída Final')">Saída Final</button>
+      <p id="mensagem" style="margin-top:15px;"></p>
+      <button onclick="sair()" style="margin-top:20px;">Sair</button>
+    </div>
+  </div>
 
-    let linhaEncontrada = -1;
+  <script>
+    let nome = '';
+    let cpf = '';
 
-    for (let i = 1; i < registros.length; i++) {
-      const nomePlanilha = registros[i][0];
-      const cpfPlanilha = registros[i][1];
-      const dataPlanilha = registros[i][2];
+    function entrar() {
+      nome = document.getElementById('nome').value.trim();
+      cpf = document.getElementById('cpf').value.trim();
 
-      let dataPlanilhaFormatada = "";
-      if (dataPlanilha instanceof Date) {
-        dataPlanilhaFormatada = Utilities.formatDate(dataPlanilha, "GMT-3", "dd/MM/yyyy");
-      } else if (typeof dataPlanilha === "string") {
-        dataPlanilhaFormatada = dataPlanilha;
+      if (!nome || !cpf) {
+        alert('Por favor, preencha todos os campos.');
+        return;
       }
 
-      if (
-        nomePlanilha === nome &&
-        cpfPlanilha === cpf &&
-        dataPlanilhaFormatada === dataFormatada
-      ) {
-        linhaEncontrada = i + 1;
-        break;
-      }
+      // Oculta login, mostra painel
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
+      document.getElementById('saudacao').innerText = `Olá, ${nome}`;
+      document.getElementById('mensagem').innerText = '';
     }
 
-    if (linhaEncontrada === -1) {
-      sheet.appendRow([nome, cpf, dataAtual, "", "", "", ""]);
-      linhaEncontrada = sheet.getLastRow();
+    function sair() {
+      nome = '';
+      cpf = '';
+      document.getElementById('nome').value = '';
+      document.getElementById('cpf').value = '';
+      document.getElementById('mensagem').innerText = '';
+      document.getElementById('painel').style.display = 'none';
+      document.getElementById('login').style.display = 'block';
     }
 
-    let coluna = 0;
-    switch (tipo) {
-      case "Entrada":
-        coluna = 4;
-        break;
-      case "Saída Almoço":
-        coluna = 5;
-        break;
-      case "Volta Almoço":
-        coluna = 6;
-        break;
-      case "Saída Final":
-        coluna = 7;
-        break;
+    function registrar(tipo) {
+      const horario = new Date().toLocaleString('pt-BR');
+
+      // Mensagem para o usuário
+      document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
+
+      // URL do seu Apps Script (substitua pela sua URL real)
+      const url = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+
+      fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: nome,
+          cpf: cpf,
+          tipo: tipo
+          // Não precisa enviar hora, o Apps Script vai gerar
+        })
+      }).catch((error) => {
+        console.error('Erro ao enviar dados:', error);
+        document.getElementById('mensagem').innerText = 'Erro ao registrar. Tente novamente.';
+      });
     }
-
-    if (coluna > 0) {
-      sheet.getRange(linhaEncontrada, coluna).setValue(horaFormatada);
-    }
-
-    return ContentService.createTextOutput("OK");
-
-  } catch (erro) {
-    Logger.log("Erro: " + erro);
-    return ContentService.createTextOutput("Erro");
-  }
-}
+  </script>
+</body>
+</html>
