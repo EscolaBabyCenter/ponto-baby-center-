@@ -88,8 +88,8 @@
       // Mensagem para o usuário
       document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
 
-      // URL do seu Apps Script (substitua pela sua URL real)
-      const url = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+      // URL do seu Apps Script
+      const url = 'https://script.google.com/macros/s/AKfycbyT43EU--wbxIH3fmXurr0IYxR7CWerlZrofzOWBSz79HCnY7Y7VWodKYVTZl5CY12SQg/exec';
 
       fetch(url, {
         method: 'POST',
@@ -99,7 +99,6 @@
           nome: nome,
           cpf: cpf,
           tipo: tipo
-          // Não precisa enviar hora, o Apps Script vai gerar
         })
       }).catch((error) => {
         console.error('Erro ao enviar dados:', error);
@@ -109,3 +108,4 @@
   </script>
 </body>
 </html>
+
