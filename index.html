@@ -7,24 +7,24 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
+      margin-top: 50px;
       background-color: #f5f5f5;
-      padding: 50px;
     }
     input, button {
       margin: 8px;
       padding: 10px 20px;
       font-size: 16px;
     }
-    .box {
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      display: inline-block;
-    }
     #painel {
       display: none;
       margin-top: 20px;
+    }
+    .box {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
     }
   </style>
 </head>
@@ -71,5 +71,20 @@
       const horario = new Date().toLocaleString('pt-BR');
       document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
 
-      const url = 'https://sc
+      const url = 'https://script.google.com/macros/s/AKfycbyT43EU--wbxIH3fmXurr0IYxR7CWerlZrofzOWBSz79HCnY7Y7VWodKYVTZl5CY12SQg/exec';
 
+      fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: nome,
+          cpf: cpf,
+          tipo: tipo,
+          horario: horario
+        })
+      });
+    }
+  </script>
+</body>
+</html>
