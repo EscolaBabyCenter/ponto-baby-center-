@@ -1,6 +1,9 @@
 function registrar(tipo) {
   const url = 'https://script.google.com/macros/s/AKfycbzSAyJ6ekyQm_fhvoxFdtCp-vDyo_wS_bXYBipOGqkSJcko26zyFnxZqvfdvQPR8tSh1Q/exec';
 
+  const nome = document.getElementById("nome").value;
+  const cpf = document.getElementById("cpf").value;
+
   fetch(url, {
     method: 'POST',
     mode: 'no-cors',
