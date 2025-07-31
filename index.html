@@ -6,138 +6,101 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
-      width: 320px;
+      margin-top: 50px;
+      background-color: #f5f5f5;
     }
     input, button {
-      margin: 10px 0;
+      margin: 8px;
       padding: 10px 20px;
       font-size: 16px;
-      width: 100%;
-      box-sizing: border-box;
     }
     #painel {
       display: none;
       margin-top: 20px;
     }
-    button.batida {
-      width: 48%;
-      margin: 5px 1%;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    p#mensagem {
-      margin-top: 15px;
-      font-weight: 600;
-      min-height: 20px;
-      color: green;
+    .box {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="box">
     <h2>Registro de Ponto</h2>
 
     <div id="login">
-      <input type="text" id="nome" placeholder="Nome do colaborador" required />
-      <input type="text" id="cpf" placeholder="CPF" required />
-      <button id="btnEntrar">Entrar</button>
+      <input type="text" id="nome" placeholder="Nome do colaborador" required /><br />
+      <input type="text" id="cpf" placeholder="CPF" required /><br />
+      <button onclick="entrar()">Entrar</button>
     </div>
 
     <div id="painel">
       <h3 id="saudacao"></h3>
-      <div>
-        <button class="batida" data-tipo="entrada">Entrada</button>
-        <button class="batida" data-tipo="saidaAlmoco">Saída Almoço</button>
-      </div>
-      <div>
-        <button class="batida" data-tipo="voltaAlmoco">Volta Almoço</button>
-        <button class="batida" data-tipo="saidaFinal">Saída Final</button>
-      </div>
-      <p id="mensagem"></p>
-      <button id="btnSair">Sair</button>
+      <button onclick="registrar('entrada')">Entrada</button>
+      <button onclick="registrar('saidaalmoco')">Saída Almoço</button>
+      <button onclick="registrar('voltaalmoco')">Volta Almoço</button>
+      <button onclick="registrar('saidafinal')">Saída Final</button>
+      <p id="mensagem" style="margin-top:15px;"></p>
+      <button onclick="sair()" style="margin-top:20px;">Sair</button>
     </div>
   </div>
 
   <script>
-    const btnEntrar = document.getElementById('btnEntrar');
-    const btnSair = document.getElementById('btnSair');
-    const loginDiv = document.getElementById('login');
-    const painelDiv = document.getElementById('painel');
-    const saudacao = document.getElementById('saudacao');
-    const mensagem = document.getElementById('mensagem');
-    const botoesBatida = document.querySelectorAll('.batida');
-
     let nome = '';
     let cpf = '';
 
-    btnEntrar.addEventListener('click', () => {
+    function entrar() {
       nome = document.getElementById('nome').value.trim();
       cpf = document.getElementById('cpf').value.trim();
 
       if (!nome || !cpf) {
-        alert('Por favor, preencha nome e CPF para continuar.');
+        alert('Por favor, preencha todos os campos.');
         return;
       }
 
-      loginDiv.style.display = 'none';
-      painelDiv.style.display = 'block';
-      saudacao.innerText = `Olá, ${nome}!`;
-      mensagem.innerText = '';
-    });
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
+      document.getElementById('saudacao').innerText = `Olá, ${nome}`;
+      document.getElementById('mensagem').innerText = '';
+    }
 
-    btnSair.addEventListener('click', () => {
+    function sair() {
       nome = '';
       cpf = '';
       document.getElementById('nome').value = '';
       document.getElementById('cpf').value = '';
-      mensagem.innerText = '';
-      painelDiv.style.display = 'none';
-      loginDiv.style.display = 'block';
-    });
-
-    botoesBatida.forEach(button => {
-      button.addEventListener('click', () => {
-        registrar(button.dataset.tipo);
-      });
-    });
+      document.getElementById('mensagem').innerText = '';
+      document.getElementById('painel').style.display = 'none';
+      document.getElementById('login').style.display = 'block';
+    }
 
     function registrar(tipo) {
-      const url = 'COLE_AQUI_SEU_URL_DO_WEB_APP';
+      const url = 'https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec';
 
-      const formData = new FormData();
+      const formData = new URLSearchParams();
       formData.append('nome', nome);
       formData.append('cpf', cpf);
       formData.append('tipo', tipo);
 
       fetch(url, {
         method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: formData
       })
-      .then(response => response.text())
-      .then(msg => {
+      .then(() => {
         const horario = new Date().toLocaleTimeString('pt-BR');
-        mensagem.innerText = `${msg} às ${horario}`;
+        document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
       })
       .catch(() => {
-        mensagem.innerText = 'Erro ao registrar. Tente novamente.';
+        document.getElementById('mensagem').innerText = 'Erro ao registrar. Tente novamente.';
       });
     }
   </script>
 
 </body>
 </html>
-
