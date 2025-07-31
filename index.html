@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ponto Digital</title>
   <style>
     body {
@@ -17,7 +17,7 @@
       background-color: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
       width: 100%;
       max-width: 400px;
     }
@@ -81,7 +81,7 @@
         return;
       }
 
-      fetch("https://script.google.com/macros/library/d/1eFD9-pSxvCs90VwD9OA7RB8x1Xf9P_HLHV_z3S5EigMbZAm0DQG4afEf/1", {
+      fetch("https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -105,4 +105,3 @@
   </script>
 </body>
 </html>
-
