@@ -1,35 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Ponto Digital - Escola Baby Center</title>
+  <meta charset="UTF-8" />
+  <title>Registro de Ponto - Baby Center</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      background: #f5f5f5;
+      padding: 40px;
       text-align: center;
-      padding: 30px;
-    }
-    h1 {
-      color: #2c3e50;
     }
     form {
-      background: #fff;
+      background: white;
       padding: 20px;
-      margin: 0 auto;
+      margin: auto;
       max-width: 400px;
-      border-radius: 10px;
+      border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     input, select, button {
-      margin: 10px 0;
-      padding: 10px;
       width: 100%;
+      padding: 10px;
+      margin-top: 10px;
       font-size: 16px;
     }
     button {
       background-color: #27ae60;
-      color: #fff;
+      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -41,23 +38,20 @@
 </head>
 <body>
   <h1>Registro de Ponto</h1>
-  <form 
-    action="https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec" 
-    method="POST"
-    target="_blank"
-  >
-    <input type="text" name="nome" placeholder="Nome completo" required />
+  <form action="https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec" method="POST" target="_blank">
+    <input type="text" name="nome" placeholder="Nome Completo" required />
     <input type="text" name="cpf" placeholder="CPF (somente números)" required />
     <select name="tipo" required>
-      <option value="">Selecione a batida</option>
+      <option value="">Selecione a Batida</option>
       <option value="Entrada">Entrada</option>
-      <option value="Saída para Almoço">Saída para Almoço</option>
-      <option value="Volta do Almoço">Volta do Almoço</option>
+      <option value="Saída Almoço">Saída para o Almoço</option>
+      <option value="Volta Almoço">Volta do Almoço</option>
       <option value="Saída Final">Saída Final</option>
     </select>
     <button type="submit">Registrar</button>
   </form>
 </body>
 </html>
+
 
 
