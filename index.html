@@ -3,6 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <title>Registro de Ponto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      padding: 40px;
+    }
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    input, select, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+    #mensagem {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <h1>Registro de Ponto</h1>
@@ -10,7 +36,7 @@
     <input type="text" id="nome" placeholder="Nome" required />
     <input type="text" id="cpf" placeholder="CPF" required />
     <select id="tipo" required>
-      <option value="">Selecione tipo</option>
+      <option value="">Selecione o tipo</option>
       <option value="Entrada">Entrada</option>
       <option value="Saída Almoço">Saída Almoço</option>
       <option value="Volta Almoço">Volta Almoço</option>
@@ -24,10 +50,12 @@
   <script>
     const form = document.getElementById("formPonto");
     const mensagem = document.getElementById("mensagem");
-    const URL = "URL_DO_SEU_WEBAPP";
+
+    const URL = "https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec";
 
     form.addEventListener("submit", e => {
       e.preventDefault();
+
       const nome = document.getElementById("nome").value.trim();
       const cpf = document.getElementById("cpf").value.trim();
       const tipo = document.getElementById("tipo").value;
@@ -43,14 +71,14 @@
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ nome, cpf, tipo }),
       })
-        .then((res) => res.text())
-        .then((text) => {
+        .then(res => res.text())
+        .then(text => {
           mensagem.textContent = text;
           mensagem.style.color = "green";
           form.reset();
         })
-        .catch((err) => {
-          mensagem.textContent = "Erro ao registrar ponto.";
+        .catch(err => {
+          mensagem.textContent = "Erro ao registrar o ponto.";
           mensagem.style.color = "red";
           console.error(err);
         });
