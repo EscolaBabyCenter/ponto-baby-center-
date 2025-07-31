@@ -82,4 +82,48 @@
 
       if (!nome || !cpf) {
         alert('Por favor, preencha nome e CPF para continuar.');
+        return;
+      }
+
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
+      document.getElementById('saudacao').innerText = `Olá, ${nome}!`;
+      document.getElementById('mensagem').innerText = '';
+    }
+
+    function sair() {
+      nome = '';
+      cpf = '';
+      document.getElementById('nome').value = '';
+      document.getElementById('cpf').value = '';
+      document.getElementById('mensagem').innerText = '';
+      document.getElementById('painel').style.display = 'none';
+      document.getElementById('login').style.display = 'block';
+    }
+
+    function registrar(tipo) {
+      const url = 'https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec';
+
+      const formData = new FormData();
+      formData.append('nome', nome);
+      formData.append('cpf', cpf);
+      formData.append('tipo', tipo);
+
+      fetch(url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(msg => {
+        const horario = new Date().toLocaleTimeString('pt-BR');
+        document.getElementById('mensagem').innerText = `${msg} às ${horario}`;
+      })
+      .catch(() => {
+        document.getElementById('mensagem').innerText = 'Erro ao registrar. Tente novamente.';
+      });
+    }
+  </script>
+
+</body>
+</html>
 
