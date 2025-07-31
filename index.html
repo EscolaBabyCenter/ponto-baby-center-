@@ -6,102 +6,87 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
       text-align: center;
-      margin-top: 50px;
-      background-color: #f5f5f5;
-    }
-    .container {
-      background-color: white;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 320px;
-      margin: auto;
     }
-    input, button {
-      width: 100%;
+    h1 {
+      color: #333;
+    }
+    input, button, select {
+      margin: 10px;
       padding: 10px;
-      margin: 10px 0;
       font-size: 16px;
-      box-sizing: border-box;
     }
-    #relogio {
-      font-weight: bold;
-      margin-bottom: 20px;
+    .botoes button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
-    #status {
-      color: green;
-      margin-top: 10px;
+    .botoes button:hover {
+      background-color: #45a049;
+    }
+    .mensagem {
+      margin-top: 20px;
       font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Registro de Ponto</h2>
+  <h1>Registro de Ponto</h1>
+  
+  <input type="text" id="nome" placeholder="Nome completo" required>
+  <input type="text" id="cpf" placeholder="CPF (apenas números)" required>
 
-    <input type="text" id="nome" placeholder="Digite seu nome completo" required />
-    <input type="text" id="cpf" placeholder="Digite seu CPF" required />
-
-    <div id="relogio">--:--:--</div>
-
-    <button onclick="registrar('entrada')">Entrada</button>
-    <button onclick="registrar('saidaAlmoco')">Saída Almoço</button>
-    <button onclick="registrar('voltaAlmoco')">Volta Almoço</button>
-    <button onclick="registrar('saidaFinal')">Saída Final</button>
-
-    <div id="status"></div>
-
-    <button onclick="window.location.reload()">Sair</button>
+  <div class="botoes">
+    <button id="btnEntrada">Entrada</button>
+    <button id="btnSaidaAlmoco">Saída Almoço</button>
+    <button id="btnVoltaAlmoco">Volta Almoço</button>
+    <button id="btnSaidaFinal">Saída Final</button>
   </div>
 
+  <div class="mensagem" id="mensagem"></div>
+
   <script>
-    function atualizarRelogio() {
-      const agora = new Date();
-      const horas = agora.getHours().toString().padStart(2, '0');
-      const minutos = agora.getMinutes().toString().padStart(2, '0');
-      const segundos = agora.getSeconds().toString().padStart(2, '0');
-      document.getElementById("relogio").textContent = `${horas}:${minutos}:${segundos}`;
-    }
-    setInterval(atualizarRelogio, 1000);
-    atualizarRelogio();
+    const URL = "https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec";
 
     function registrar(tipo) {
       const nome = document.getElementById("nome").value.trim();
       const cpf = document.getElementById("cpf").value.trim();
-      const status = document.getElementById("status");
+      const mensagem = document.getElementById("mensagem");
 
       if (!nome || !cpf) {
-        status.style.color = "red";
-        status.textContent = "Por favor, preencha nome e CPF.";
+        mensagem.innerText = "Por favor, preencha nome e CPF.";
         return;
       }
 
-      status.style.color = "black";
-      status.textContent = "Enviando...";
-
-      fetch('https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
+      fetch(URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
-          nome: nome,
-          cpf: cpf,
-          tipo: tipo
+          nome,
+          cpf,
+          tipo
         })
       })
-      .then(response => response.text())
+      .then(res => res.text())
       .then(texto => {
-        status.style.color = "green";
-        status.textContent = texto;
+        mensagem.innerText = texto;
       })
-      .catch(erro => {
-        status.style.color = "red";
-        status.textContent = "Erro ao registrar ponto.";
-        console.error(erro);
+      .catch(err => {
+        mensagem.innerText = "Erro ao registrar ponto. Tente novamente.";
+        console.error(err);
       });
     }
+
+    // Associar eventos aos botões
+    document.getElementById("btnEntrada").addEventListener("click", () => registrar('entrada'));
+    document.getElementById("btnSaidaAlmoco").addEventListener("click", () => registrar('saidaAlmoco'));
+    document.getElementById("btnVoltaAlmoco").addEventListener("click", () => registrar('voltaAlmoco'));
+    document.getElementById("btnSaidaFinal").addEventListener("click", () => registrar('saidaFinal'));
   </script>
 </body>
 </html>
