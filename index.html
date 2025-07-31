@@ -34,14 +34,18 @@
     button:hover {
       background-color: #219150;
     }
+    #mensagem {
+      margin-top: 15px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>Registro de Ponto</h1>
-  <form action="https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec" method="POST" target="_blank">
-    <input type="text" name="nome" placeholder="Nome Completo" required />
-    <input type="text" name="cpf" placeholder="CPF (somente números)" required />
-    <select name="tipo" required>
+  <form id="formPonto">
+    <input type="text" name="nome" id="nome" placeholder="Nome Completo" required />
+    <input type="text" name="cpf" id="cpf" placeholder="CPF (somente números)" required />
+    <select name="tipo" id="tipo" required>
       <option value="">Selecione a Batida</option>
       <option value="Entrada">Entrada</option>
       <option value="Saída Almoço">Saída para o Almoço</option>
@@ -50,6 +54,44 @@
     </select>
     <button type="submit">Registrar</button>
   </form>
+
+  <div id="mensagem"></div>
+
+  <script>
+    const form = document.getElementById('formPonto');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById('nome').value.trim();
+      const cpf = document.getElementById('cpf').value.trim();
+      const tipo = document.getElementById('tipo').value;
+
+      if (!nome || !cpf || !tipo) {
+        mensagem.textContent = 'Por favor, preencha todos os campos.';
+        mensagem.style.color = 'red';
+        return;
+      }
+
+      fetch('https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ nome, cpf, tipo })
+      })
+      .then(response => response.text())
+      .then(text => {
+        mensagem.textContent = text;
+        mensagem.style.color = 'green';
+        form.reset();
+      })
+      .catch(error => {
+        mensagem.textContent = 'Erro ao registrar ponto. Tente novamente.';
+        mensagem.style.color = 'red';
+        console.error(error);
+      });
+    });
+  </script>
 </body>
 </html>
 
