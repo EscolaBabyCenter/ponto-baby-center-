@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Ponto Digital</title>
+  <meta charset="UTF-8">
+  <title>Registro de Ponto</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,97 +10,87 @@
       margin-top: 50px;
       background-color: #f5f5f5;
     }
-    input, button {
-      margin: 8px;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-    #painel {
-      display: none;
-      margin-top: 20px;
-    }
-    .box {
+    .container {
       background-color: white;
-      padding: 20px;
-      border-radius: 12px;
+      padding: 30px;
+      border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      display: inline-block;
+      width: 300px;
+      margin: auto;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #relogio {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    #status {
+      color: green;
+      margin-top: 10px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-
-  <div class="box">
+  <div class="container">
     <h2>Registro de Ponto</h2>
+    <p>Olá, <strong>Romário marques Goncalves</strong>!</p>
+    <div id="relogio">--:--:--</div>
 
-    <div id="login">
-      <input type="text" id="nome" placeholder="Nome do colaborador" required /><br />
-      <input type="text" id="cpf" placeholder="CPF" required /><br />
-      <button onclick="entrar()">Entrar</button>
-    </div>
+    <button onclick="registrar('entrada')">Entrada</button>
+    <button onclick="registrar('saidaAlmoco')">Saída Almoço</button>
+    <button onclick="registrar('voltaAlmoco')">Volta Almoço</button>
+    <button onclick="registrar('saidaFinal')">Saída Final</button>
 
-    <div id="painel">
-      <h3 id="saudacao"></h3>
-      <button onclick="registrar('entrada')">Entrada</button>
-      <button onclick="registrar('saidaalmoco')">Saída Almoço</button>
-      <button onclick="registrar('voltaalmoco')">Volta Almoço</button>
-      <button onclick="registrar('saidafinal')">Saída Final</button>
-      <p id="mensagem" style="margin-top:15px;"></p>
-      <button onclick="sair()" style="margin-top:20px;">Sair</button>
-    </div>
+    <div id="status"></div>
+
+    <button onclick="window.location.reload()">Sair</button>
   </div>
 
   <script>
-    let nome = '';
-    let cpf = '';
+    const nome = "Romário marques Goncalves";
+    const cpf = "12345678900"; // Substitua se quiser tornar dinâmico
 
-    function entrar() {
-      nome = document.getElementById('nome').value.trim();
-      cpf = document.getElementById('cpf').value.trim();
-
-      if (!nome || !cpf) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
-
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('painel').style.display = 'block';
-      document.getElementById('saudacao').innerText = `Olá, ${nome}`;
-      document.getElementById('mensagem').innerText = '';
+    function atualizarRelogio() {
+      const agora = new Date();
+      const horas = agora.getHours().toString().padStart(2, '0');
+      const minutos = agora.getMinutes().toString().padStart(2, '0');
+      const segundos = agora.getSeconds().toString().padStart(2, '0');
+      document.getElementById("relogio").textContent = `${horas}:${minutos}:${segundos}`;
     }
-
-    function sair() {
-      nome = '';
-      cpf = '';
-      document.getElementById('nome').value = '';
-      document.getElementById('cpf').value = '';
-      document.getElementById('mensagem').innerText = '';
-      document.getElementById('painel').style.display = 'none';
-      document.getElementById('login').style.display = 'block';
-    }
+    setInterval(atualizarRelogio, 1000);
+    atualizarRelogio();
 
     function registrar(tipo) {
-      const url = 'https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec';
+      const status = document.getElementById("status");
+      status.textContent = "Enviando...";
 
-      const formData = new URLSearchParams();
-      formData.append('nome', nome);
-      formData.append('cpf', cpf);
-      formData.append('tipo', tipo);
-
-      fetch(url, {
+      fetch('https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec', {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: formData
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          nome: nome,
+          cpf: cpf,
+          tipo: tipo
+        })
       })
-      .then(() => {
-        const horario = new Date().toLocaleTimeString('pt-BR');
-        document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
+      .then(response => response.text())
+      .then(texto => {
+        status.textContent = texto;
       })
-      .catch(() => {
-        document.getElementById('mensagem').innerText = 'Erro ao registrar. Tente novamente.';
+      .catch(erro => {
+        status.textContent = "Erro ao registrar ponto.";
+        console.error(erro);
       });
     }
   </script>
-
 </body>
 </html>
