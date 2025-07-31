@@ -2,91 +2,92 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Registro de Ponto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ponto Digital</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f1f1f1;
       text-align: center;
-      padding: 30px;
+      background-color: #f5f5f5;
+      padding: 20px;
     }
-    h1 {
-      color: #333;
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: auto;
     }
-    input, button, select {
-      margin: 10px;
+    input, select, button {
+      margin: 10px 0;
       padding: 10px;
-      font-size: 16px;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
-    .botoes button {
+    button {
       background-color: #4CAF50;
       color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .botoes button:hover {
-      background-color: #45a049;
-    }
-    .mensagem {
-      margin-top: 20px;
       font-weight: bold;
-      color: #333;
+      border: none;
+    }
+    #mensagem {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Registro de Ponto</h1>
-  
-  <input type="text" id="nome" placeholder="Nome completo" required>
-  <input type="text" id="cpf" placeholder="CPF (apenas números)" required>
-
-  <div class="botoes">
-    <button id="btnEntrada">Entrada</button>
-    <button id="btnSaidaAlmoco">Saída Almoço</button>
-    <button id="btnVoltaAlmoco">Volta Almoço</button>
-    <button id="btnSaidaFinal">Saída Final</button>
+  <div class="container">
+    <h2>Registro de Ponto</h2>
+    <form id="pontoForm">
+      <input type="text" id="cpf" placeholder="CPF" required />
+      <select id="tipo" required>
+        <option value="">Selecione o tipo de batida</option>
+        <option value="entrada">Entrada</option>
+        <option value="saidaAlmoco">Saída para Almoço</option>
+        <option value="voltaAlmoco">Volta do Almoço</option>
+        <option value="saidaFinal">Saída Final</option>
+      </select>
+      <button type="submit">Registrar</button>
+    </form>
+    <div id="mensagem"></div>
   </div>
 
-  <div class="mensagem" id="mensagem"></div>
-
   <script>
-    const URL = "https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec";
+    document.getElementById("pontoForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      registrar();
+    });
 
-    function registrar(tipo) {
-      const nome = document.getElementById("nome").value.trim();
+    function registrar() {
       const cpf = document.getElementById("cpf").value.trim();
-      const mensagem = document.getElementById("mensagem");
+      const tipo = document.getElementById("tipo").value;
 
-      if (!nome || !cpf) {
-        mensagem.innerText = "Por favor, preencha nome e CPF.";
+      if (!cpf || !tipo) {
+        document.getElementById("mensagem").textContent = "Preencha todos os campos.";
         return;
       }
 
-      fetch(URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      fetch('https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
-          nome,
-          cpf,
-          tipo
+          cpf: cpf,
+          tipo: tipo
         })
       })
       .then(res => res.text())
-      .then(texto => {
-        mensagem.innerText = texto;
+      .then(msg => {
+        document.getElementById("mensagem").textContent = msg;
       })
-      .catch(err => {
-        mensagem.innerText = "Erro ao registrar ponto. Tente novamente.";
-        console.error(err);
+      .catch(error => {
+        document.getElementById("mensagem").textContent = "Erro ao registrar ponto.";
+        console.error(error);
       });
     }
-
-    // Associar eventos aos botões
-    document.getElementById("btnEntrada").addEventListener("click", () => registrar('entrada'));
-    document.getElementById("btnSaidaAlmoco").addEventListener("click", () => registrar('saidaAlmoco'));
-    document.getElementById("btnVoltaAlmoco").addEventListener("click", () => registrar('voltaAlmoco'));
-    document.getElementById("btnSaidaFinal").addEventListener("click", () => registrar('saidaFinal'));
   </script>
 </body>
 </html>
