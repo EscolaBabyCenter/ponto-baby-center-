@@ -54,29 +54,37 @@
     <div id="login">
       <input type="text" id="nome" placeholder="Nome do colaborador" required />
       <input type="text" id="cpf" placeholder="CPF" required />
-      <button onclick="entrar()">Entrar</button>
+      <button id="btnEntrar">Entrar</button>
     </div>
 
     <div id="painel">
       <h3 id="saudacao"></h3>
       <div>
-        <button class="batida" onclick="registrar('entrada')">Entrada</button>
-        <button class="batida" onclick="registrar('saidaAlmoco')">Saída Almoço</button>
+        <button class="batida" data-tipo="entrada">Entrada</button>
+        <button class="batida" data-tipo="saidaAlmoco">Saída Almoço</button>
       </div>
       <div>
-        <button class="batida" onclick="registrar('voltaAlmoco')">Volta Almoço</button>
-        <button class="batida" onclick="registrar('saidaFinal')">Saída Final</button>
+        <button class="batida" data-tipo="voltaAlmoco">Volta Almoço</button>
+        <button class="batida" data-tipo="saidaFinal">Saída Final</button>
       </div>
       <p id="mensagem"></p>
-      <button onclick="sair()">Sair</button>
+      <button id="btnSair">Sair</button>
     </div>
   </div>
 
   <script>
+    const btnEntrar = document.getElementById('btnEntrar');
+    const btnSair = document.getElementById('btnSair');
+    const loginDiv = document.getElementById('login');
+    const painelDiv = document.getElementById('painel');
+    const saudacao = document.getElementById('saudacao');
+    const mensagem = document.getElementById('mensagem');
+    const botoesBatida = document.querySelectorAll('.batida');
+
     let nome = '';
     let cpf = '';
 
-    function entrar() {
+    btnEntrar.addEventListener('click', () => {
       nome = document.getElementById('nome').value.trim();
       cpf = document.getElementById('cpf').value.trim();
 
@@ -85,24 +93,30 @@
         return;
       }
 
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('painel').style.display = 'block';
-      document.getElementById('saudacao').innerText = `Olá, ${nome}!`;
-      document.getElementById('mensagem').innerText = '';
-    }
+      loginDiv.style.display = 'none';
+      painelDiv.style.display = 'block';
+      saudacao.innerText = `Olá, ${nome}!`;
+      mensagem.innerText = '';
+    });
 
-    function sair() {
+    btnSair.addEventListener('click', () => {
       nome = '';
       cpf = '';
       document.getElementById('nome').value = '';
       document.getElementById('cpf').value = '';
-      document.getElementById('mensagem').innerText = '';
-      document.getElementById('painel').style.display = 'none';
-      document.getElementById('login').style.display = 'block';
-    }
+      mensagem.innerText = '';
+      painelDiv.style.display = 'none';
+      loginDiv.style.display = 'block';
+    });
+
+    botoesBatida.forEach(button => {
+      button.addEventListener('click', () => {
+        registrar(button.dataset.tipo);
+      });
+    });
 
     function registrar(tipo) {
-      const url = 'https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec';
+      const url = 'COLE_AQUI_SEU_URL_DO_WEB_APP';
 
       const formData = new FormData();
       formData.append('nome', nome);
@@ -116,10 +130,10 @@
       .then(response => response.text())
       .then(msg => {
         const horario = new Date().toLocaleTimeString('pt-BR');
-        document.getElementById('mensagem').innerText = `${msg} às ${horario}`;
+        mensagem.innerText = `${msg} às ${horario}`;
       })
       .catch(() => {
-        document.getElementById('mensagem').innerText = 'Erro ao registrar. Tente novamente.';
+        mensagem.innerText = 'Erro ao registrar. Tente novamente.';
       });
     }
   </script>
