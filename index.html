@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Registro de Ponto - Baby Center</title>
+  <title>Registro de Ponto</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -43,13 +43,13 @@
 <body>
   <h1>Registro de Ponto</h1>
   <form id="formPonto">
-    <input type="text" name="nome" id="nome" placeholder="Nome Completo" required />
-    <input type="text" name="cpf" id="cpf" placeholder="CPF (somente números)" required />
+    <input type="text" name="nome" id="nome" placeholder="Nome completo" required />
+    <input type="text" name="cpf" id="cpf" placeholder="CPF" required />
     <select name="tipo" id="tipo" required>
-      <option value="">Selecione a Batida</option>
+      <option value="">Selecione o tipo</option>
       <option value="Entrada">Entrada</option>
-      <option value="Saída Almoço">Saída para o Almoço</option>
-      <option value="Volta Almoço">Volta do Almoço</option>
+      <option value="Saída Almoço">Saída Almoço</option>
+      <option value="Volta Almoço">Volta Almoço</option>
       <option value="Saída Final">Saída Final</option>
     </select>
     <button type="submit">Registrar</button>
@@ -60,34 +60,35 @@
   <script>
     const form = document.getElementById('formPonto');
     const mensagem = document.getElementById('mensagem');
+    const URL = "COLE_AQUI_SEU_URL_DO_WEB_APP";
 
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
+    form.addEventListener('submit', e => {
+      e.preventDefault();
 
       const nome = document.getElementById('nome').value.trim();
       const cpf = document.getElementById('cpf').value.trim();
       const tipo = document.getElementById('tipo').value;
 
       if (!nome || !cpf || !tipo) {
-        mensagem.textContent = 'Por favor, preencha todos os campos.';
         mensagem.style.color = 'red';
+        mensagem.textContent = 'Preencha todos os campos.';
         return;
       }
 
-      fetch('https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec', {
+      fetch(URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ nome, cpf, tipo })
       })
       .then(response => response.text())
       .then(text => {
-        mensagem.textContent = text;
         mensagem.style.color = 'green';
+        mensagem.textContent = text;
         form.reset();
       })
       .catch(error => {
-        mensagem.textContent = 'Erro ao registrar ponto. Tente novamente.';
         mensagem.style.color = 'red';
+        mensagem.textContent = 'Erro ao registrar ponto.';
         console.error(error);
       });
     });
