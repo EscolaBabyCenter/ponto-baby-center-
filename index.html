@@ -1,107 +1,93 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ponto Digital</title>
+  <meta charset="UTF-8">
+  <title>Ponto Digital - Escola Baby Center</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      background-color: white;
+      text-align: center;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 400px;
     }
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
+    h1 {
+      color: #2c3e50;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      margin: 0 auto;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     input, select, button {
-      width: 100%;
+      margin: 10px 0;
       padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      width: 100%;
       font-size: 16px;
     }
     button {
-      background-color: #28a745;
-      color: white;
-      font-weight: bold;
+      background-color: #27ae60;
+      color: #fff;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
+    }
+    button:hover {
+      background-color: #219150;
     }
     #mensagem {
       margin-top: 15px;
-      color: green;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Registro de Ponto</h2>
-    <form id="pontoForm">
-      <input type="text" id="cpf" placeholder="CPF" required />
-      <input type="text" id="nome" placeholder="Nome do Colaborador" required />
-      <select id="tipo" required>
-        <option value="">Selecione o tipo de batida</option>
-        <option value="entrada">Entrada</option>
-        <option value="saidaAlmoco">Saída para Almoço</option>
-        <option value="voltaAlmoco">Volta do Almoço</option>
-        <option value="saidaFinal">Saída Final</option>
-      </select>
-      <button type="submit">Registrar</button>
-    </form>
+  <h1>Registro de Ponto</h1>
+  <form id="formPonto">
+    <input type="text" id="nome" name="nome" placeholder="Nome completo" required />
+    <input type="text" id="cpf" name="cpf" placeholder="CPF (somente números)" required />
+    <select id="tipo" name="tipo" required>
+      <option value="">Selecione a batida</option>
+      <option value="Entrada">Entrada</option>
+      <option value="Saída para Almoço">Saída para Almoço</option>
+      <option value="Volta do Almoço">Volta do Almoço</option>
+      <option value="Saída Final">Saída Final</option>
+    </select>
+    <button type="submit">Registrar</button>
     <div id="mensagem"></div>
-  </div>
+  </form>
 
   <script>
-    document.getElementById("pontoForm").addEventListener("submit", function(event) {
+    document.getElementById("formPonto").addEventListener("submit", function (event) {
       event.preventDefault();
-      registrar();
-    });
 
-    function registrar() {
-      const cpf = document.getElementById("cpf").value.trim();
       const nome = document.getElementById("nome").value.trim();
+      const cpf = document.getElementById("cpf").value.trim();
       const tipo = document.getElementById("tipo").value;
 
-      if (!cpf || !nome || !tipo) {
-        document.getElementById("mensagem").textContent = "Preencha todos os campos.";
+      if (!nome || !cpf || !tipo) {
+        document.getElementById("mensagem").innerText = "Preencha todos os campos!";
         return;
       }
 
       fetch("https://script.google.com/macros/s/AKfycbwPN_9_ps8zsJ3QyDjsjx-sXxD2pBBQw_NY-83lux91vxxEt3O32UmGEBOzqg9ufW3xNQ/exec", {
         method: "POST",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         },
         body: new URLSearchParams({
-          cpf: cpf,
           nome: nome,
+          cpf: cpf,
           tipo: tipo
         })
-      })
-      .then(res => res.text())
-      .then(msg => {
-        document.getElementById("mensagem").textContent = msg;
-        document.getElementById("pontoForm").reset();
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById("mensagem").textContent = "Erro ao registrar ponto.";
       });
-    }
+
+      document.getElementById("mensagem").innerText = "Registro enviado!";
+      document.getElementById("formPonto").reset();
+    });
   </script>
 </body>
 </html>
