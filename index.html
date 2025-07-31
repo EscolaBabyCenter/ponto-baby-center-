@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Ponto Digital</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="data:,"> <!-- evita erro de favicon.ico -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -42,10 +42,10 @@
 
     <div id="painel">
       <h3 id="saudacao"></h3>
-      <button onclick="registrar('Entrada')">Entrada</button>
-      <button onclick="registrar('Saída Almoço')">Saída Almoço</button>
-      <button onclick="registrar('Volta Almoço')">Volta Almoço</button>
-      <button onclick="registrar('Saída Final')">Saída Final</button>
+      <button onclick="registrar('entrada')">Entrada</button>
+      <button onclick="registrar('saidaAlmoco')">Saída Almoço</button>
+      <button onclick="registrar('voltaAlmoco')">Volta Almoço</button>
+      <button onclick="registrar('saidaFinal')">Saída Final</button>
       <p id="mensagem" style="margin-top:15px;"></p>
       <button onclick="sair()" style="margin-top:20px;">Sair</button>
     </div>
@@ -77,31 +77,5 @@
       document.getElementById('cpf').value = '';
       document.getElementById('mensagem').innerText = '';
       document.getElementById('painel').style.display = 'none';
-      document.getElementById('login').style.display = 'block';
-    }
-
-    function registrar(tipo) {
-      const url = 'https://script.google.com/macros/s/AKfycbwfhZJpBZj0ByDPPshaTkk0r3HE3yxl0IGLW8lT7ur7apq2RSY1JIM1lYeyUbIvgMA0/exec';
-      const formData = new URLSearchParams();
-      formData.append('nome', nome);
-      formData.append('cpf', cpf);
-      formData.append('tipo', tipo.toLowerCase().replace(' ', ''));
-
-      fetch(url, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
-      })
-      .then(() => {
-        const horario = new Date().toLocaleTimeString('pt-BR');
-        document.getElementById('mensagem').innerText = `${tipo} registrado às ${horario}`;
-      })
-      .catch(() => {
-        document.getElementById('mensagem').innerText = 'Erro ao registrar. Verifique sua conexão.';
-      });
-    }
-  </script>
-
-</body>
-</html>
+      document.getElementById('login'
 
